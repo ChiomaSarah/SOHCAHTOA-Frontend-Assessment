@@ -36,3 +36,13 @@ body {
     scrollbar-width: none;
   }
 }
+
+/* Global button cursor */
+@layer base {
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}

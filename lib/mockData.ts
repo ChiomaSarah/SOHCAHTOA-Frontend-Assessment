@@ -21,7 +21,7 @@ export const mockTransactions: Transaction[] = [
   },
   {
     id: "t3",
-    name: "Transfer to Esrael",
+    name: "Transfer to Paul",
     date: "2025-03-02T10:08:00Z",
     amount: -200,
     type: "transfer-out",
@@ -75,7 +75,7 @@ export const mockTransactions: Transaction[] = [
   },
   {
     id: "t9",
-    name: "Transfer from Chidi",
+    name: "Transfer from Moses",
     date: "2024-12-20T08:00:00Z",
     amount: 450,
     type: "transfer-in",
@@ -95,7 +95,7 @@ export const mockTransactions: Transaction[] = [
   },
   {
     id: "t11",
-    name: "Transfer to Emeka",
+    name: "Transfer to Ayomide",
     date: "2024-12-10T15:00:00Z",
     amount: -750,
     type: "transfer-out",

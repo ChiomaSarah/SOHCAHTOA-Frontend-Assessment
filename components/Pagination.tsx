@@ -7,6 +7,7 @@ export const Pagination = ({
   page,
   totalPages,
   total,
+  limit = 10,
   onPageChange,
 }: PaginationProps) => {
   const getPageNumbers = () => {
@@ -43,48 +44,59 @@ export const Pagination = ({
 
   if (totalPages <= 1) return null;
 
+  const start = (page - 1) * limit + 1;
+  const end = Math.min(page * limit, total);
+
   return (
-    <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-      <p className="text-xs text-gray-400">
-        Page {page} of {totalPages} · {total} transactions
+    <div className="flex flex-col sm:flex-row items-center justify-between mt-4 pt-4 border-t border-gray-100 gap-3">
+      <p className="text-[11px] sm:text-xs text-gray-400">
+        Showing <span className="text-gray-500 font-medium">{start}</span> to{" "}
+        <span className="text-gray-500 font-medium">{end}</span> of{" "}
+        <span className="text-gray-500 font-medium">{total}</span> transactions
       </p>
 
       <div className="flex items-center gap-1">
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page === 1}
-          className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeft size={14} className="text-gray-500" />
         </button>
 
-        {getPageNumbers().map((pageNum, index) =>
-          pageNum === "..." ? (
-            <span
-              key={`dots-${index}`}
-              className="w-7 h-7 flex items-center justify-center text-xs text-gray-400"
-            >
-              ...
-            </span>
-          ) : (
-            <button
-              key={pageNum}
-              onClick={() => onPageChange(pageNum)}
-              className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs transition-colors ${
-                page === pageNum
-                  ? "bg-orange-50 text-orange-500 font-medium"
-                  : "text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              {pageNum}
-            </button>
-          ),
-        )}
+        <div className="hidden sm:flex items-center gap-1">
+          {getPageNumbers().map((pageNum, index) =>
+            pageNum === "..." ? (
+              <span
+                key={`dots-${index}`}
+                className="w-8 h-8 flex items-center justify-center text-xs text-gray-400"
+              >
+                ...
+              </span>
+            ) : (
+              <button
+                key={pageNum}
+                onClick={() => onPageChange(pageNum)}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs transition-colors ${
+                  page === pageNum
+                    ? "bg-orange-50 text-orange-500 font-medium"
+                    : "text-gray-500 hover:bg-gray-50"
+                }`}
+              >
+                {pageNum}
+              </button>
+            ),
+          )}
+        </div>
+
+        <span className="sm:hidden px-3 py-1 rounded-lg bg-orange-50 text-orange-500 text-xs font-medium">
+          {page} of {totalPages}
+        </span>
 
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page === totalPages}
-          className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronRight size={14} className="text-gray-500" />
         </button>

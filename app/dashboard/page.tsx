@@ -185,7 +185,7 @@ const Dashboard = () => {
 
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">
-              <p className="text-gray-900">Total FX units</p>
+              <p className="text-gray-700">Total FX units</p>
               <button
                 onClick={() => setBalanceVisible(!balanceVisible)}
                 className="text-gray-900 hover:text-gray-600 transition-colors"
@@ -238,13 +238,12 @@ const Dashboard = () => {
         </div>
 
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 flex-1">
-          <div className="flex items-center justify-between mb-5 gap-2">
-            <h2 className="text-sm font-semibold text-gray-900 whitespace-nowrap">
+          <div className="flex items-center justify-between mb-5 gap-1">
+            <h2 className="text-sm font-medium text-gray-900 whitespace-nowrap">
               FX transactions
             </h2>
 
             <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-              {/* Date */}
               <button
                 onClick={() => handleSort("date")}
                 className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap leading-none flex items-center"
@@ -340,6 +339,7 @@ const Dashboard = () => {
               page={pagination.page}
               totalPages={pagination.totalPages}
               total={pagination.total}
+              limit={pagination.limit}
               onPageChange={handlePageChange}
             />
           )}
@@ -347,9 +347,9 @@ const Dashboard = () => {
       </div>
 
       {/* RIGHT COLUMN */}
-      <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100 h-fit lg:sticky lg:top-6">
-        <div className="bg-gray-50 rounded-xl p-3 sm:p-4 mb-3">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Cards</h2>
+      <div className="bg-white rounded-2xl p-2 sm:p-4 shadow-sm border border-gray-100 h-fit lg:sticky lg:top-6">
+        <div className="bg-gray-50 rounded-xl p-2 sm:p-4 mb-2 sm:mb-3">
+          <h2 className="text-sm text-gray-900 mb-2 sm:mb-3">Cards</h2>
           <div className="flex items-center gap-2">
             <VisaCard />
             <button className="self-stretch min-h-[48px] w-10 rounded-2xl border border-dashed border-gray-300 flex items-center justify-center hover:border-gray-400 transition-colors shrink-0">
@@ -358,12 +358,10 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-gray-50 rounded-xl p-3 sm:p-4 mb-3">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-900">
-              Card transactions
-            </h3>
-            <button className="flex items-center justify-center bg-transparent text-gray-700 border-gray-200 hover:bg-gray-50 px-2 py-1 rounded-full shadow-sm text-sm font-medium border cursor-pointer">
+        <div className="bg-gray-50 rounded-xl p-2 sm:p-4 mb-2 sm:mb-3">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <h2 className="text-sm text-gray-900">Card transactions</h2>
+            <button className="flex items-center justify-center bg-transparent text-gray-700 border-gray-200 hover:bg-gray-50 px-2 py-1 rounded-full shadow-sm text-xs font-medium border cursor-pointer">
               See all
             </button>
           </div>
@@ -374,12 +372,15 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-gray-50 rounded-xl p-3 sm:p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-900">
-              Card transaction flows
-            </h3>
-            <span className="text-sm font-bold text-gray-900">+$3,048.00</span>
+        <div className="bg-gray-50 rounded-xl p-2 sm:p-4">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <h2 className="text-sm text-gray-900">Card transaction flows</h2>
+            <div className="flex items-baseline">
+              <span className="text-sm font-medium text-gray-900">+$3,048</span>
+              <span className="text-xs font-normal text-gray-900 ml-0.5">
+                .00
+              </span>
+            </div>
           </div>
           <div className="space-y-3">
             <div>

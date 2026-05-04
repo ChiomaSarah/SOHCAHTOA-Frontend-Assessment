@@ -29,12 +29,15 @@ export interface TransactionDetailsPanelProps {
   transaction: Transaction;
   onClose: () => void;
 }
+
 export interface PaginationProps {
   page: number;
   totalPages: number;
   total: number;
+  limit: number;
   onPageChange: (page: number) => void;
 }
+
 export interface Pagination {
   page: number;
   limit: number;

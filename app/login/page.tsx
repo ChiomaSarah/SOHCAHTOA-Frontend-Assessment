@@ -70,7 +70,7 @@ const Login = () => {
               Welcome back
             </h1>
             <p className="text-sm text-gray-500 mt-1 text-center">
-              Log in to your Payout BDC account
+              Log in to your account
             </p>
           </div>
 
@@ -153,7 +153,8 @@ const Login = () => {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          © 2025 SohCahToa Payout BDC. All rights reserved.
+          © 2025 Sarah Osuji&apos;s SohCahToa Frontend Assessment. All rights
+          reserved.
         </p>
       </div>
     </div>

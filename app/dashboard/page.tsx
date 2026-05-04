@@ -133,7 +133,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4 lg:gap-6 h-full">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_500px] gap-4 lg:gap-6 h-full">
       {/* LEFT COLUMN */}
       <div className="flex flex-col gap-4 lg:gap-6 overflow-auto">
         {/* FX Header Card */}
@@ -374,9 +374,14 @@ const Dashboard = () => {
 
         <div className="bg-gray-50 rounded-xl p-2 sm:p-4">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <h2 className="text-sm text-gray-900">Card transaction flows</h2>
+            <h2 className="text-sm text-gray-900">
+              <span className="hidden sm:inline">Card transaction flows</span>
+              <span className="sm:hidden">Card flows</span>
+            </h2>
             <div className="flex items-baseline">
-              <span className="text-sm font-medium text-gray-900">+$3,048</span>
+              <span className="text-sm font-semibold text-gray-900">
+                +$3,048
+              </span>
               <span className="text-xs font-normal text-gray-900 ml-0.5">
                 .00
               </span>
@@ -386,9 +391,7 @@ const Dashboard = () => {
             <div>
               <div className="flex justify-between mb-1.5">
                 <span className="text-[11px] text-gray-500">Money in</span>
-                <span className="text-[11px] font-semibold text-gray-900 font-mono">
-                  $4,046.00
-                </span>
+                <span className="text-[11px] text-gray-900">$4,046.00</span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                 <div className="h-full w-[78%] bg-green-500 rounded-full" />
@@ -397,9 +400,7 @@ const Dashboard = () => {
             <div>
               <div className="flex justify-between mb-1.5">
                 <span className="text-[11px] text-gray-500">Money out</span>
-                <span className="text-[11px] font-semibold text-gray-900 font-mono">
-                  $1,046.00
-                </span>
+                <span className="text-[11px] text-gray-900">$1,046.00</span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                 <div className="h-full w-[28%] bg-orange-500 rounded-full" />

@@ -1,125 +1,188 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronRight, ChevronDown, ChevronLeft, LogOut } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { clearCredentials } from "@/app/appStore/authSlice";
+import { RootState } from "@/app/appStore/store";
+import { useDispatch, useSelector } from "react-redux";
+import { SidebarProps } from "@/interface";
 
 const navItems = [
-  {
-    id: "home",
-    label: "Home",
-    icon: "/icons/home.svg",
-  },
-  {
-    id: "calculator",
-    label: "Calculator",
-    icon: "/icons/calculator.svg",
-  },
+  { id: "home", label: "Home", icon: "/icons/home.svg" },
+  { id: "calculator", label: "Calculator", icon: "/icons/calculator.svg" },
   {
     id: "transactions",
     label: "Transactions",
     icon: "/icons/transactions.svg",
   },
-  {
-    id: "cards",
-    label: "Cards",
-    icon: "/icons/card.svg",
-    badge: 2,
-  },
+  { id: "cards", label: "Cards", icon: "/icons/card.svg", badge: 2 },
 ];
 
-interface SidebarProps {
-  activeNav: string;
-  onNavChange: (nav: string) => void;
-}
+export const Sidebar = ({
+  activeNav,
+  onNavChange,
+  isOpen,
+  onClose,
+}: SidebarProps) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.user);
 
-export default function Sidebar({ activeNav, onNavChange }: SidebarProps) {
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    dispatch(clearCredentials());
+    router.push("/login");
+  };
+
   return (
-    <aside className="w-56 min-w-56 h-full bg-white border-r border-gray-200 flex flex-col py-5">
-      <div className="flex items-center justify-between px-4 pb-6">
-        <Image
-          src="/icons/logo.svg"
-          alt="SohCahToa Payout BDC"
-          width={80}
-          height={32}
-          priority
+    <>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-30 md:hidden"
+          onClick={onClose}
         />
-        <ChevronRight size={14} className="text-gray-400" />
-      </div>
+      )}
 
-      <nav className="flex-1 px-2">
-        {navItems.map(({ id, label, icon, badge }) => {
-          const active = activeNav === id;
-          return (
-            <button
-              key={id}
-              onClick={() => onNavChange(id)}
-              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl border-none cursor-pointer mb-0.5 text-sm transition-all
-                ${
-                  active
-                    ? "bg-orange-50 text-orange-500 font-semibold"
-                    : "bg-transparent text-gray-500 font-normal hover:bg-gray-50"
-                }`}
-            >
-              <Image
-                src={icon}
-                alt={`${label} icon`}
-                width={16}
-                height={16}
-                className={`shrink-0 transition-opacity ${
-                  active ? "opacity-100" : "opacity-70"
-                }`}
-                style={{
-                  filter: active
-                    ? "brightness(0) saturate(100%) invert(54%) sepia(98%) saturate(3332%) hue-rotate(360deg) brightness(101%) contrast(96%)" // Orange color
-                    : "brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(203%) hue-rotate(169deg) brightness(91%) contrast(86%)", // Gray color
-                }}
-              />
-              <span className="flex-1 text-left">{label}</span>
-              {badge && (
-                <span className="bg-orange-500 text-white rounded-full w-4 h-4 text-[10px] font-bold flex items-center justify-center">
-                  {badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
-
-      <div className="px-2">
-        <div className="border-t border-gray-200 mb-3" />
-
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border-none cursor-pointer bg-transparent text-gray-500 text-sm mb-3 hover:bg-gray-50 transition-colors">
-          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+      <aside
+        className={`
+          fixed md:static top-0 left-0 z-40 h-full bg-white border-r border-gray-200 flex flex-col py-5 transition-all duration-300
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          md:translate-x-0
+          ${collapsed ? "w-16 min-w-16" : "w-56 min-w-56"}
+        `}
+      >
+        <div
+          className={`flex items-center ${
+            collapsed ? "justify-center pb-5 px-2" : "justify-between px-4"
+          } border-b border-gray-200`}
+        >
+          {!collapsed && (
             <Image
-              src="/icons/support.svg"
-              alt="Support icon"
-              width={16}
-              height={16}
-              className="shrink-0 opacity-70"
+              src="/icons/logo.svg"
+              alt="logo"
+              width={80}
+              height={32}
+              priority
+              style={{ width: "auto", height: "auto" }}
             />
-          </div>
-          <span className="flex-1 text-left">Support</span>
-        </button>
+          )}
 
-        {/* User Profile Dropdown */}
-        <button className="w-full flex items-center gap-3 p-2 rounded-2xl border border-gray-200 cursor-pointer bg-white hover:bg-gray-50 transition-colors shadow-sm">
-          <Image
-            src="/icons/avatar.svg"
-            alt="Emmanuel Israel"
-            width={40}
-            height={40}
-            priority
-            className="rounded-full shrink-0 object-cover"
-          />
-          <div className="overflow-hidden flex-1 text-left">
-            <p className="text-sm font-semibold text-gray-900 truncate">
-              Emmanuel Israel
-            </p>
-            <p className="text-sm text-gray-400 truncate">emmanuel.e.israel</p>
-          </div>
-          <ChevronDown size={16} className="text-gray-400 shrink-0" />
-        </button>
-      </div>
-    </aside>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100"
+          >
+            {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          </button>
+        </div>
+
+        <nav className="flex-1 pt-4 px-2">
+          {navItems.map(({ id, label, icon, badge }) => {
+            const active = activeNav === id;
+
+            return (
+              <div key={id} className="relative group">
+                <button
+                  onClick={() => {
+                    onNavChange(id);
+                    onClose();
+                  }}
+                  className={`w-full flex items-center rounded-xl mb-1 text-sm transition-all
+      ${collapsed ? "justify-center p-2.5" : "gap-2.5 px-3 py-2.5"}
+      ${
+        active
+          ? "bg-orange-50 text-orange-500 font-semibold"
+          : "bg-transparent text-gray-500 font-normal hover:bg-gray-50"
+      }`}
+                >
+                  <Image
+                    src={icon}
+                    alt={`${label} icon`}
+                    width={16}
+                    height={16}
+                    className={`shrink-0 transition-opacity ${
+                      active ? "opacity-100" : "opacity-70"
+                    }`}
+                    style={{
+                      filter: active
+                        ? "brightness(0) saturate(100%) invert(54%) sepia(98%) saturate(3332%) hue-rotate(360deg) brightness(101%) contrast(96%)"
+                        : "brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(203%) hue-rotate(169deg) brightness(91%) contrast(86%)",
+                    }}
+                  />
+
+                  {!collapsed && <span>{label}</span>}
+
+                  {!collapsed && badge && (
+                    <span className="ml-auto bg-orange-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                      {badge}
+                    </span>
+                  )}
+                </button>
+
+                {/* Tooltip */}
+                {collapsed && (
+                  <span className="absolute left-full ml-2 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-md bg-orange-400 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                    {label}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </nav>
+
+        <div className="px-2">
+          <div className="border-t border-gray-200 mb-3" />
+
+          <button
+            onClick={() => setProfileOpen(!profileOpen)}
+            className="w-full flex items-center gap-3 p-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+          >
+            <Image
+              src="/icons/avatar.svg"
+              alt="user"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+
+            {!collapsed && (
+              <>
+                <div className="text-left flex-1 overflow-hidden">
+                  <p className="text-sm font-semibold truncate">
+                    {user?.name ?? "Emmanuel Israel"}
+                  </p>
+                  <p className="text-xs text-gray-400 truncate">
+                    {user?.email ?? "emmanuel.e.israel"}
+                  </p>
+                </div>
+
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform ${
+                    profileOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </>
+            )}
+          </button>
+
+          {profileOpen && !collapsed && (
+            <div className="mt-2 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50"
+              >
+                <LogOut size={14} />
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </aside>
+    </>
   );
-}
+};

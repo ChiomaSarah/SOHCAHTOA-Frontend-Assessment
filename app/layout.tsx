@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Unbounded } from "next/font/google";
-import Providers from "@/components/Providers";
+import ReduxProvider from "./appStore/provider";
 
 const unbounded = Unbounded({
   variable: "--font-unbounded",
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${unbounded.variable}`}>
-        <Providers>{children}</Providers>
+        <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
   );

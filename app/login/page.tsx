@@ -151,11 +151,6 @@ const Login = () => {
             </div>
           </div>
         </div>
-
-        <p className="text-center text-xs text-gray-400 mt-6">
-          © 2025 Sarah Osuji&apos;s SohCahToa Frontend Assessment. All rights
-          reserved.
-        </p>
       </div>
     </div>
   );

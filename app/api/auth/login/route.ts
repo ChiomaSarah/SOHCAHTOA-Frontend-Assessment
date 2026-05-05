@@ -8,16 +8,18 @@ function hashPassword(password: string): string {
 
 const USERS: User[] = [
   {
-    id: crypto.randomUUID(),
+    id: "a1b2c3d4-e5f6-7890-abcd-ef1234567891",
     email: "admin@sohcahtoa.com",
-    passwordHash: hashPassword("admin123"),
+    passwordHash:
+      "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
     role: "admin",
     name: "Emmanuel Israel",
   },
   {
-    id: crypto.randomUUID(),
+    id: "b2c3d4e5-f6a7-8901-bcde-f12345678902",
     email: "analyst@sohcahtoa.com",
-    passwordHash: hashPassword("analyst123"),
+    passwordHash:
+      "20249749412d73a3f5799f6f1dcf910e7b4aa3ce4de133b1f8a63c044792a4e9",
     role: "analyst",
     name: "Chioma Osuji",
   },

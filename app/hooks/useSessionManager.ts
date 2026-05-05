@@ -4,9 +4,9 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearCredentials } from "@/app/appStore/authSlice";
 
-const INACTIVITY_TIMEOUT = 15 * 60 * 1000;
-const REFRESH_INTERVAL = 10 * 60 * 1000;
-const WARNING_BEFORE = 60 * 1000;
+const INACTIVITY_TIMEOUT = 3 * 60 * 1000;
+const REFRESH_INTERVAL = 2 * 60 * 1000;
+const WARNING_BEFORE = 30 * 1000;
 
 export function useSessionManager() {
   const dispatch = useDispatch();

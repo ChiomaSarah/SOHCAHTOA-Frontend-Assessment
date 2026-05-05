@@ -1,4 +1,5 @@
 import { InactivityWarningProps } from "@/interface";
+import { Timer } from "lucide-react";
 
 export default function InactivityWarning({
   secondsLeft,
@@ -10,7 +11,9 @@ export default function InactivityWarning({
       <div className="relative bg-white rounded-2xl p-6 shadow-2xl max-w-sm w-full mx-4">
         <div className="flex flex-col items-center text-center gap-4">
           <div className="w-14 h-14 rounded-full bg-orange-50 flex items-center justify-center">
-            <span className="text-2xl">⏱</span>
+            <span>
+              <Timer size={20} />
+            </span>
           </div>
           <div>
             <h2 className="text-base font-bold text-gray-900 mb-1">

@@ -1,19 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import { User } from "@/interface";
 
-const USERS = [
+function hashPassword(password: string): string {
+  return crypto.createHash("sha256").update(password).digest("hex");
+}
+
+const USERS: User[] = [
   {
-    id: "1",
+    id: crypto.randomUUID(),
     email: "admin@sohcahtoa.com",
-    password: "admin123",
-    role: "admin" as const,
+    passwordHash: hashPassword("admin123"),
+    role: "admin",
     name: "Emmanuel Israel",
   },
   {
-    id: "2",
+    id: crypto.randomUUID(),
     email: "analyst@sohcahtoa.com",
-    password: "analyst123",
-    role: "analyst" as const,
-    name: "Emmanuel Israel",
+    passwordHash: hashPassword("analyst123"),
+    role: "analyst",
+    name: "Chioma Osuji",
   },
 ];
 
@@ -24,18 +30,18 @@ export async function POST(req: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Email and password are required." },
         { status: 400 },
       );
     }
 
     const user = USERS.find(
-      (u) => u.email === email && u.password === password,
+      (u) => u.email === email && u.passwordHash === hashPassword(password),
     );
 
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { error: "Invalid email or password!" },
         { status: 401 },
       );
     }
@@ -75,7 +81,7 @@ export async function POST(req: NextRequest) {
     return response;
   } catch {
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error!" },
       { status: 500 },
     );
   }

@@ -23,6 +23,7 @@ const TransactionDetailsPanel = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const isLiveTransaction = transaction.id.startsWith("live_");
 
   async function handleFlag() {
     if (!isAdmin) return;
@@ -194,12 +195,18 @@ const TransactionDetailsPanel = ({
               </p>
               <button
                 onClick={handleFlag}
-                disabled={loading || transaction.status === "flagged"}
+                disabled={
+                  loading ||
+                  transaction.status === "flagged" ||
+                  isLiveTransaction
+                }
                 className="w-full py-2.5 rounded-xl border border-orange-200 bg-orange-50 text-orange-600 text-xs font-semibold hover:bg-orange-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {transaction.status === "flagged"
                   ? "Already flagged"
-                  : "Flag this transaction"}
+                  : isLiveTransaction
+                    ? "Cannot flag live transactions"
+                    : "Flag this transaction"}
               </button>
             </div>
           )}

@@ -30,46 +30,54 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ```
 app/
-├── login/                        → Public login page
+├── login/                            → Public login page
 ├── dashboard/
-│   ├── layout.tsx                → Dashboard shell (sidebar + topbar)
-│   └── page.tsx                  → Main dashboard page
-├── proxy.ts                      → Middleware (path-based route protection)
+│   ├── layout.tsx                    → Dashboard shell (sidebar + topbar)
+│   └── page.tsx                      → Main dashboard page
 ├── api/
-│   └── auth/
-│       ├── login/                → POST /api/auth/login
-│       ├── logout/               → POST /api/auth/logout
-│       └── refresh/              → POST /api/auth/refresh
-├── transactions/
-│   ├── route.ts                  → GET /api/transactions
-│   ├── stream/                   → GET /api/transactions/stream (SSE)
-│   └── [id]/                     → PATCH /api/transactions/:id
+│   ├── auth/
+│   │   ├── login/                    → POST /api/auth/login
+│   │   ├── logout/                   → POST /api/auth/logout
+│   │   └── refresh/                  → POST /api/auth/refresh
+│   └── transactions/
+│       ├── route.ts                  → GET /api/transactions
+│       ├── stream/                   → GET /api/transactions/stream (SSE)
+│       └── [id]/                     → PATCH /api/transactions/:id
 ├── appStore/
-│   ├── authSlice.ts              → Auth state
-│   ├── provider.ts               → Redux provider wrapper
-│   ├── store.ts                  → Redux store configuration
-│   └── transactionsSlice.ts      → Transactions state
-├── components/
-│   ├── Sidebar.tsx               → Navigation sidebar
-│   ├── Topbar.tsx                → Top navigation bar
-│   ├── Greeting.tsx              → Dynamic time-based greeting
-│   ├── VisaCard.tsx              → Prepaid card component
-│   ├── TransactionRow.tsx        → Transaction list item
-│   ├── TransactionDetailsPanel.tsx → Transaction details panel
-│   └── Pagination.tsx            → Reusable pagination component
+│   ├── authSlice.ts                  → Auth state
+│   ├── provider.ts                   → Redux provider wrapper
+│   ├── store.ts                      → Redux store configuration
+│   └── transactionsSlice.ts          → Transactions state
 ├── hooks/
-│   └── useTransactionStream.ts   → SSE real-time hook
-└── lib/
-    ├── mockData.ts               → Simulated transaction data
-    └── fetchWithAuth.ts          → Authenticated fetch with refresh
+│   ├── useTransactionStream.ts       → SSE real-time hook
+│   └── useSessionManager.ts          → Inactivity + token refresh
+└── proxy.ts                          → Route protection middleware
 
+components/
+├── Sidebar.tsx                       → Navigation sidebar
+├── TopBar.tsx                        → Top navigation bar
+├── Greeting.tsx                      → Dynamic time-based greeting
+├── VisaCard.tsx                      → Prepaid card component
+├── TransactionRow.tsx                → Transaction list item
+├── TransactionDetailsPanel.tsx       → Transaction details panel
+├── Pagination.tsx                    → Reusable pagination component
+├── InactivityWarning.tsx             → Session timeout warning modal
+└── Providers.tsx                     → Redux provider wrapper
+
+lib/
+├── mockData.ts                       → Simulated transaction data
+└── fetchWithAuth.ts                  → Token refresh with race condition prevention
 ```
+
+---
 
 ## Architecture Decisions
 
 ### Authentication
 
-JWT-style tokens are simulated and stored in **httpOnly cookies** — never exposed to JavaScript. This prevents XSS-based token theft. Cookies are configured with:
+Access and refresh tokens are **simulated** for the purpose of this assessment (no external auth provider or JWT library). In production, these would be replaced with real JWT tokens signed with a secret key.
+
+Tokens are stored in **httpOnly cookies** — never exposed to JavaScript. This prevents XSS-based token theft. Cookies are configured with:
 
 - `httpOnly: true` — not accessible via `document.cookie`
 - `sameSite: strict` — prevents CSRF attacks
@@ -85,6 +93,16 @@ When an access token expires (401 response), `fetchWithAuth.ts` handles refresh 
 2. Subsequent requests that also get a 401 are **queued** while refresh is in progress
 3. Once refresh succeeds, all queued requests are **replayed** with the new token
 4. If refresh fails → cookies are cleared → user is redirected to `/login`
+
+---
+
+### Session Management
+
+- Access tokens expire after **15 minutes**
+- Token is **automatically refreshed** every 10 minutes while the user is active
+- After **15 minutes of inactivity**, a warning modal appears with a 60-second countdown
+- If the user doesn't respond, they are logged out and redirected to `/login`
+- Activity is tracked via `mousemove`, `keydown`, `click`, `scroll`, and `touchstart` events
 
 ---
 
@@ -142,7 +160,7 @@ Server-Sent Events (SSE) stream new transactions every 8 seconds via `/api/trans
 
 ### Middleware
 
-`middleware.ts` runs at the **Edge runtime** and:
+`proxy.ts` runs at the **Edge runtime** and:
 
 - Protects all `/dashboard/*` routes
 - Redirects unauthenticated users to `/login`
@@ -167,7 +185,3 @@ Deployed on Vercel: [sohcahtoa-frontend-assessment.vercel.app](https://sohcahtoa
 - **Icons:** Lucide React
 - **Fonts:** Unbounded (Google Fonts)
 - **Deployment:** Vercel
-
-```
-
-```

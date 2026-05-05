@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
-import {TopBar} from "@/components/TopBar";
+import { TopBar } from "@/components/TopBar";
+import { useSessionManager } from "../hooks/useSessionManager";
+import InactivityWarning from "@/components/InactivityWarning";
 
 export default function DashboardLayout({
   children,
@@ -11,6 +13,8 @@ export default function DashboardLayout({
 }) {
   const [activeNav, setActiveNav] = useState("home");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { showWarning, secondsLeft, handleKeepSessionActive } =
+    useSessionManager();
 
   return (
     <div className="flex h-screen bg-[#EFEFEF] overflow-hidden">
@@ -20,14 +24,18 @@ export default function DashboardLayout({
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
-
       <div className="flex flex-col flex-1 min-w-0">
         <TopBar onMenuClick={() => setSidebarOpen(true)} />
-
         <main className="flex-1 overflow-auto">
           <div className="p-4 sm:p-6 w-full">{children}</div>
-        </main>
+        </main>{" "}
       </div>
+      {showWarning && (
+        <InactivityWarning
+          secondsLeft={secondsLeft}
+          onStayActive={handleKeepSessionActive}
+        />
+      )}
     </div>
   );
 }

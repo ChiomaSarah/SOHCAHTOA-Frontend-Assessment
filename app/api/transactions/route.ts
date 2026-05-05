@@ -13,11 +13,11 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get("limit") ?? "10");
     const sortBy = searchParams.get("sortBy") ?? "date";
     const sortOrder = searchParams.get("sortOrder") ?? "desc";
-
     const status = searchParams.get("status");
     const category = searchParams.get("category");
     const dateFrom = searchParams.get("dateFrom");
     const dateTo = searchParams.get("dateTo");
+    const channel = searchParams.get("channel");
 
     let filteredTX = [...mockTransactions];
 
@@ -39,6 +39,10 @@ export async function GET(req: NextRequest) {
       filteredTX = filteredTX.filter(
         (t) => new Date(t.date) <= new Date(dateTo),
       );
+    }
+
+    if (channel) {
+      filteredTX = filteredTX.filter((t) => t.channel === channel);
     }
 
     filteredTX.sort((a, b) => {

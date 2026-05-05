@@ -9,18 +9,15 @@ export interface SidebarProps {
   onClose: () => void;
 }
 
-export type TransactionStatus = "completed" | "pending" | "failed" | "flagged";
-
-export type TransactionType = "transfer-in" | "transfer-out" | "wallet";
-
 export interface Transaction {
   id: string;
   name: string;
   date: string;
   amount: number;
-  type: TransactionType;
-  status: TransactionStatus;
+  type: "transfer-in" | "transfer-out" | "wallet";
+  status: "completed" | "pending" | "failed" | "flagged";
   category: "FX" | "PTA" | "BTA" | "Medicals";
+  channel: "fx" | "card";
   note?: string;
   cardNumber?: string;
 }
@@ -66,13 +63,19 @@ type Role = "admin" | "analyst";
 
 export interface User {
   id: string;
+  email: string;
+  passwordHash: string;
   role: Role;
   name: string;
-  email: string;
 }
 
 export interface AuthState {
   user: User | null;
   accessToken: string | null;
   isAuthenticated: boolean;
+}
+
+export interface InactivityWarningProps {
+  secondsLeft: number;
+  onStayActive: () => void;
 }

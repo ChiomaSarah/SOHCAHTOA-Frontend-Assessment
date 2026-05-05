@@ -23,48 +23,36 @@ import { Pagination } from "@/components/Pagination";
 const fxTabs = ["All", "FX", "PTA", "BTA", "Medicals"];
 const headerTabs = ["FX bought", "FX sold", "Others"];
 
-const cardTransactions: Transaction[] = [
-  {
-    id: "c1",
-    name: "Transfer to Ruth",
-    date: "2025-04-18T19:32:00Z",
-    amount: -7.64,
-    type: "transfer-out",
-    status: "failed",
-    category: "FX",
-  },
-  {
-    id: "c2",
-    name: "Wallet to wallet",
-    date: "2025-03-02T08:12:00Z",
-    amount: -14,
-    type: "wallet",
-    status: "completed",
-    category: "BTA",
-  },
-  {
-    id: "c3",
-    name: "Transfer from Tochukwu",
-    date: "2025-02-07T23:50:00Z",
-    amount: 850.89,
-    type: "transfer-in",
-    status: "completed",
-    category: "FX",
-  },
-];
-
 const Dashboard = () => {
   const [activeHeaderTab, setActiveHeaderTab] = useState("FX bought");
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
-
+  const [cardTransactions, setCardTransactions] = useState<Transaction[]>([]);
   const { items, pagination, filters, loading, error } = useSelector(
     (state: RootState) => state.transactions,
   );
   const dispatch = useDispatch();
 
   useTransactionStream();
+
+  useEffect(() => {
+    async function fetchCardTransactions() {
+      const res = await fetch("/api/transactions?channel=card&limit=3", {
+        credentials: "include",
+      });
+      if (res.status === 401) {
+        await fetch("/api/auth/logout", { method: "POST" });
+        window.location.href = "/login";
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        setCardTransactions(data.transactions);
+      }
+    }
+    fetchCardTransactions();
+  }, []);
 
   const fetchTransactionsData = useCallback(async () => {
     dispatch(setLoading(true));

@@ -69,14 +69,12 @@ const transactionsSlice = createSlice({
       if (index !== -1) {
         state.items[index] = action.payload;
       } else {
-        state.items.unshift(action.payload);
-        if (state.items.length > state.pagination.limit) {
-          state.items.pop();
+        if (state.pagination.page === 1) {
+          state.items.unshift(action.payload);
+          if (state.items.length > state.pagination.limit) {
+            state.items.pop();
+          }
         }
-        state.pagination.total += 1;
-        state.pagination.totalPages = Math.ceil(
-          state.pagination.total / state.pagination.limit,
-        );
       }
     },
 
